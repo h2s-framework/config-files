@@ -1,0 +1,9 @@
+id: Siarko.ConfigFiles.default
+
+types:
+  # interface preferences
+  \Siarko\ConfigFiles\Api\Modifier\ModifierManagerInterface: \Siarko\ConfigFiles\Modifier\ModifierManager
+  \Siarko\ConfigFiles\Api\ConfigMergerInterface: \Siarko\ConfigFiles\Merger\ConfigMerger
+  \Siarko\ConfigFiles\Api\ConfigPlacementStrategyInterface: \Siarko\ConfigFiles\Placement\IdConfigPlacementStrategy
+  \Siarko\ConfigFiles\Api\PrioritySorterInterface: \Siarko\ConfigFiles\Sorter\TopologicalSort
+  \Siarko\ConfigFiles\Api\Provider\ConfigProviderInterface: \Siarko\ConfigFiles\Provider\ScopedProvider

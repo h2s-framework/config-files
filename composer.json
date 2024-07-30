@@ -1,0 +1,22 @@
+{
+  "name": "siarkowodor/config-files",
+  "description": "Library for loading config files - filetype agnostic",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "version": "0.1.0",
+  "type": "library",
+  "authors": [
+    {
+      "name": "H2S",
+      "email": "mateusz@siarko.pl"
+    }
+  ],
+  "require": {
+    "siarkowodor/file-abstraction": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Siarko\\ConfigFiles\\": "src/"
+    }
+  }
+}
