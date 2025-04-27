@@ -8,8 +8,9 @@ use Siarko\ConfigFiles\Api\ConfigPlacementStrategyInterface;
 use Siarko\ConfigFiles\Api\ConfigMergerInterface;
 use Siarko\ConfigFiles\Api\Modifier\ModifierManagerInterface;
 use Siarko\ConfigFiles\Api\PrioritySorterInterface;
+use Siarko\ConfigFiles\Api\Provider\ConfigFileNameProviderInterface;
 use Siarko\ConfigFiles\Api\Provider\ConfigProviderInterface;
-use Siarko\Files\Api\FileInterface;
+use Siarko\ConfigFiles\Api\Provider\LookupScopeComparatorInterface;
 use Siarko\Files\Api\LookupInterface;
 use Siarko\Files\Parse\ParserManager;
 
@@ -19,12 +20,14 @@ class ScopedProvider implements ConfigProviderInterface
     /**
      * @param LookupInterface $fileLookup
      * @param ParserManager $fileParserManager
-     * @param ModifierManagerInterface $modifierManager
      * @param ConfigFileExtensionProvider $extensionProvider
      * @param AppState $appState
+     * @param ModifierManagerInterface $modifierManager
      * @param ConfigMergerInterface $configMerger
      * @param PrioritySorterInterface $prioritySorter
      * @param ConfigPlacementStrategyInterface $placementStrategy
+     * @param ConfigFileNameProviderInterface $configFileNameProvider
+     * @param LookupScopeComparatorInterface $lookupScopeComparator
      * @param string $fileParserType
      */
     public function __construct(
@@ -36,6 +39,8 @@ class ScopedProvider implements ConfigProviderInterface
         protected readonly ConfigMergerInterface            $configMerger,
         protected readonly PrioritySorterInterface          $prioritySorter,
         protected readonly ConfigPlacementStrategyInterface $placementStrategy,
+        protected readonly ConfigFileNameProviderInterface  $configFileNameProvider,
+        protected readonly LookupScopeComparatorInterface   $lookupScopeComparator,
         protected readonly string                           $fileParserType = 'default'
     )
     {
@@ -80,14 +85,14 @@ class ScopedProvider implements ConfigProviderInterface
     {
         $configs = [];
         $extension = $this->extensionProvider->getAsRegex($type);
-
-        /** @var FileInterface $item */
-        foreach ($this->fileLookup->find($type . '.' . $extension) as $item) {
-            if (!$this->checkFileScope($scope, $item)) {
+        $fileName = $this->configFileNameProvider->getFileName($type);
+        foreach ($this->fileLookup->find($fileName . '.' . $extension) as $item) {
+            if (!$this->lookupScopeComparator->compare($scope, $item)) {
                 continue;
             }
-            $config = $this->fileParserManager->parse($item, $this->fileParserType);
-            $config = $this->modifierManager->applyModifications($item, $config);
+            $file = $item->getFile();
+            $config = $this->fileParserManager->parse($file, $this->fileParserType);
+            $config = $this->modifierManager->applyModifications($file, $config);
             if (empty($config)) {
                 continue;
             }
@@ -95,20 +100,6 @@ class ScopedProvider implements ConfigProviderInterface
         }
 
         return $this->mergeConfigs($configs);
-    }
-
-    /**
-     * @param string $scope
-     * @param FileInterface $item
-     * @return bool
-     */
-    private function checkFileScope(string $scope, FileInterface $item): bool
-    {
-        $fileScope = basename($item->getPathInfo()->getDirname());
-        if (ctype_upper($fileScope[0])) {
-            $fileScope = AppState::SCOPE_DEFAULT;
-        }
-        return $fileScope === $scope;
     }
 
 }

@@ -7,3 +7,5 @@ types:
   \Siarko\ConfigFiles\Api\ConfigPlacementStrategyInterface: \Siarko\ConfigFiles\Placement\IdConfigPlacementStrategy
   \Siarko\ConfigFiles\Api\PrioritySorterInterface: \Siarko\ConfigFiles\Sorter\TopologicalSort
   \Siarko\ConfigFiles\Api\Provider\ConfigProviderInterface: \Siarko\ConfigFiles\Provider\ScopedProvider
+  \Siarko\ConfigFiles\Api\Provider\ConfigFileNameProviderInterface: \Siarko\ConfigFiles\Provider\ConfigFileNameProvider
+  \Siarko\ConfigFiles\Api\Provider\LookupScopeComparatorInterface: \Siarko\ConfigFiles\Provider\LookupScopeComparator
