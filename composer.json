@@ -3,7 +3,6 @@
   "description": "Library for loading config files - filetype agnostic",
   "minimum-stability": "stable",
   "license": "proprietary",
-  "version": "0.2",
   "type": "library",
   "authors": [
     {
@@ -12,7 +11,7 @@
     }
   ],
   "require": {
-    "h2sf/file-abstraction": "^0.2"
+    "h2sf/file-abstraction": "^0.3"
   },
   "autoload": {
     "psr-4": {
